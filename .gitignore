@@ -1,0 +1,5 @@
+# PhpStorm project files
+.idea
+
+# Output files
+.txt
