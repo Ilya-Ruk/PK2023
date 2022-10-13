@@ -79,6 +79,10 @@ class TestController
          * Генерируем КГ с общим количеством мест
          */
 
+        echo 'Generate CG...';
+
+        $startTime = microtime(true);
+
         $numberTotal = 0; // Всего мест
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
@@ -89,6 +93,10 @@ class TestController
             self::$competitiveGroupList[$cgId]['count'] = 0; // Количество зачисленных
             self::$competitiveGroupList[$cgId]['number'] = $number; // Общее количество мест
         }
+
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
 
 //        $numberTotal = 2;
 //
@@ -103,6 +111,10 @@ class TestController
         /**
          * Генерируем абитуриентов с результатами ВИ, ИД и выбранными КГ с расставленными приоритетами
          */
+
+        echo 'Generate students...';
+
+        $startTime = microtime(true);
 
         $appTotal = 0; // Всего заявлений
 
@@ -164,6 +176,10 @@ class TestController
             }
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
 //        $appTotal = 6;
 //
 //        self::$studentList[0]['status'] = self::STATUS_NO;
@@ -193,6 +209,10 @@ class TestController
          * Заполняем КГ по заявлениям абитуриентов
          */
 
+        echo 'Filling CG...';
+
+        $startTime = microtime(true);
+
         for ($studentId = 0; $studentId < self::MAX_STUDENTS; $studentId++) {
             if (!isset(self::$studentList[$studentId]['applicationList'])) { // У абитуриента нет заявлений
                 continue;
@@ -211,6 +231,10 @@ class TestController
             }
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
 //        print_r(self::$competitiveGroupList);
 
         /**
@@ -221,6 +245,10 @@ class TestController
          * - балл за ВИ 2;
          * - балл за ВИ 3
          */
+
+        echo 'Sorting CG...';
+
+        $startTime = microtime(true);
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
             if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
@@ -272,9 +300,17 @@ class TestController
             });
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
         /**
          * Заполняем позицию в КГ
          */
+
+        echo 'Set position...';
+
+        $startTime = microtime(true);
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
             if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
@@ -290,11 +326,19 @@ class TestController
             }
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
 //        print_r(self::$competitiveGroupList);
 
         /**
          * Проводим зачисление
          */
+
+        echo 'Algorithm...';
+
+        $startTime = microtime(true);
 
         $studentTotal = 0; // Всего зачисленных
 
@@ -360,11 +404,19 @@ class TestController
             }
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
 //        print_r(self::$competitiveGroupList);
 
         /**
          * Проверяем зачисление
          */
+
+        echo 'Test...';
+
+        $startTime = microtime(true);
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
             if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
@@ -427,12 +479,18 @@ class TestController
             }
         }
 
+        $stopTime = microtime(true);
+
+        echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
+
         /**
          * Выводим:
          * - общее количество мест;
          * - общее количество заявлений;
          * - общее количество зачисленных
          */
+
+        echo PHP_EOL;
 
         echo 'Number total: ' . $numberTotal . PHP_EOL; // Всего мест
         echo 'Application total: ' . $appTotal . PHP_EOL; // Всего заявлений
