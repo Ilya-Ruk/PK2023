@@ -568,26 +568,26 @@ class TestController
     private static function randomGaussian(float $mu = 0.0, float $sigma = 1.0): float
     {
         if (self::$call == 1) {
-            self::$call = !self::$call;
+            self::$call = 0;
 
-            return ($mu + $sigma * (float)self::$X2);
+            return ($mu + $sigma * self::$X2);
         }
 
         do {
-            $U1 = -1 + ((float)mt_rand() / mt_getrandmax()) * 2;
-            $U2 = -1 + ((float)mt_rand() / mt_getrandmax()) * 2;
+            $U1 = -1.0 + ((float)mt_rand() / mt_getrandmax()) * 2.0;
+            $U2 = -1.0 + ((float)mt_rand() / mt_getrandmax()) * 2.0;
 
             $W = pow($U1, 2) + pow($U2, 2);
-        } while ($W >= 1 || $W == 0);
+        } while ($W == 0 || $W >= 1);
 
         $mult = sqrt((-2 * log($W)) / $W);
 
         self::$X1 = $U1 * $mult;
         self::$X2 = $U2 * $mult;
 
-        self::$call = !self::$call;
+        self::$call = 1;
 
-        return ($mu + $sigma * (float)self::$X1);
+        return ($mu + $sigma * self::$X1);
     }
 
     /**
