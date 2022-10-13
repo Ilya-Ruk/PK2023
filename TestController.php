@@ -6,9 +6,9 @@
 
 class TestController
 {
-    const COMPETITIVE_GROUPS = 150; // Количество КГ
+    const COMPETITIVE_GROUPS = 200; // Количество КГ
 
-    const CG_NUMBER_LIST = [1, 2, 3, 5, 10, 15, 20, 30]; // Возможное количество мест в КГ
+    const CG_NUMBER_LIST = [1, 2, 3, 5, 10, 15, 20, 30, 40]; // Возможное количество мест в КГ
 
     const MAX_STUDENTS = 15000; // Количество абитуриентов
 
@@ -18,7 +18,7 @@ class TestController
     const MIN_IA = 0; // Минимальный балл за ИД
     const MAX_IA = 10; // Максимальный балл за ИД
 
-    const MAX_APPLICATIONS = 5; // Максимальное количество заявлений от одного абитуриента
+    const MAX_APPLICATIONS = 7; // Максимальное количество заявлений от одного абитуриента
 
     const STATUS_NO = 0; // Не зачислен
     const STATUS_YES = 1; // Зачислен
@@ -126,7 +126,7 @@ class TestController
             $appCount = mt_rand(1, self::MAX_APPLICATIONS); // Количество заявлений для текущего абитуриента
 
             $sigma = 0.5;           // [-0.5..0.5]
-            $sigma_3 = 3 * $sigma;  // [-1.5..1.5]
+            $sigma_2 = 2 * $sigma;  // [-1.0..1.0]
 
             for ($priority = 1; $priority <= $appCount; $priority++) {
                 while (true) {
@@ -140,7 +140,7 @@ class TestController
                      */
                     while (true) {
                         $rand = self::RandomGaussian(0.0, $sigma);
-                        $cgId = ($rand + $sigma_3) * (self::COMPETITIVE_GROUPS - 1) / (2 * $sigma_3);
+                        $cgId = ($rand + $sigma_2) * (self::COMPETITIVE_GROUPS - 1) / (2 * $sigma_2);
 
                         if ($cgId >= 0 && $cgId < self::COMPETITIVE_GROUPS) {
                             break;
@@ -501,18 +501,21 @@ class TestController
          */
 
 //        $maxCount = 0;
+//        $maxWidth = 80;
 //
 //        for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
 //            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
 //                continue;
 //            }
 //
-//            if (count(self::$competitiveGroupList[$cgId]['applicationList']) > $maxCount) {
-//                $maxCount = count(self::$competitiveGroupList[$cgId]['applicationList']);
+//            $count = count(self::$competitiveGroupList[$cgId]['applicationList']);
+//
+//            if ($count > $maxCount) {
+//                $maxCount = $count;
 //            }
 //        }
 //
-//        $maxWidth = 80;
+//        printf("\n");
 //
 //        for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
 //            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
@@ -521,7 +524,9 @@ class TestController
 //
 //            printf("[%2d] ", $cgId);
 //
-//            for ($i = 0; $i < count(self::$competitiveGroupList[$cgId]['applicationList']) * $maxWidth / $maxCount; $i++) {
+//            $count = count(self::$competitiveGroupList[$cgId]['applicationList']);
+//
+//            for ($i = 0; $i < $count * $maxWidth / $maxCount; $i++) {
 //                printf("*");
 //            }
 //
