@@ -578,9 +578,9 @@ class TestController
             $U2 = -1.0 + ((float)mt_rand() / mt_getrandmax()) * 2.0;
 
             $W = pow($U1, 2) + pow($U2, 2);
-        } while ($W == 0 || $W >= 1);
+        } while ($W == 0.0 || $W >= 1.0);
 
-        $mult = sqrt((-2 * log($W)) / $W);
+        $mult = sqrt((-2.0 * log($W)) / $W);
 
         self::$X1 = $U1 * $mult;
         self::$X2 = $U2 * $mult;
