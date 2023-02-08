@@ -92,19 +92,12 @@ class TestController
 
             self::$competitiveGroupList[$cgId]['count'] = 0; // Количество зачисленных
             self::$competitiveGroupList[$cgId]['number'] = $number; // Общее количество мест
+            self::$competitiveGroupList[$cgId]['applicationList'] = []; // Список заявлений
         }
 
         $stopTime = microtime(true);
 
         echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
-
-//        $numberTotal = 2;
-//
-//        self::$competitiveGroupList[0]['count'] = 0;
-//        self::$competitiveGroupList[0]['number'] = 1;
-//
-//        self::$competitiveGroupList[1]['count'] = 0;
-//        self::$competitiveGroupList[1]['number'] = 1;
 
 //        print_r(self::$competitiveGroupList);
 
@@ -180,29 +173,6 @@ class TestController
 
         echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
 
-//        $appTotal = 6;
-//
-//        self::$studentList[0]['status'] = self::STATUS_NO;
-//        self::$studentList[0]['cgId'] = null;
-//        self::$studentList[0]['applicationList'] = [
-//            0 => ['result_total' => 290, 'priority' => 1],
-//            1 => ['result_total' => 280, 'priority' => 2]
-//        ];
-//
-//        self::$studentList[1]['status'] = self::STATUS_NO;
-//        self::$studentList[1]['cgId'] = null;
-//        self::$studentList[1]['applicationList'] = [
-//            0 => ['result_total' => 280, 'priority' => 1],
-//            1 => ['result_total' => 270, 'priority' => 2]
-//        ];
-//
-//        self::$studentList[2]['status'] = self::STATUS_NO;
-//        self::$studentList[2]['cgId'] = null;
-//        self::$studentList[2]['applicationList'] = [
-//            0 => ['result_total' => 270, 'priority' => 2],
-//            1 => ['result_total' => 260, 'priority' => 1]
-//        ];
-
 //        print_r(self::$studentList);
 
         /**
@@ -214,7 +184,7 @@ class TestController
         $startTime = microtime(true);
 
         for ($studentId = 0; $studentId < self::MAX_STUDENTS; $studentId++) {
-            if (!isset(self::$studentList[$studentId]['applicationList'])) { // У абитуриента нет заявлений
+            if (count(self::$studentList[$studentId]['applicationList']) == 0) { // У абитуриента нет заявлений
                 continue;
             }
 
@@ -259,40 +229,35 @@ class TestController
                 if ($a['result_total'] < $b['result_total']) {
                     return 1;
                 }
-
-                if ($a['result_total'] > $b['result_total']) {
+                elseif ($a['result_total'] > $b['result_total']) {
                     return -1;
                 }
 
                 if ($a['result_sum'] < $b['result_sum']) {
                     return 1;
                 }
-
-                if ($a['result_sum'] > $b['result_sum']) {
+                elseif ($a['result_sum'] > $b['result_sum']) {
                     return -1;
                 }
 
                 if ($a['result_1'] < $b['result_1']) {
                     return 1;
                 }
-
-                if ($a['result_1'] > $b['result_1']) {
+                elseif ($a['result_1'] > $b['result_1']) {
                     return -1;
                 }
 
                 if ($a['result_2'] < $b['result_2']) {
                     return 1;
                 }
-
-                if ($a['result_2'] > $b['result_2']) {
+                elseif ($a['result_2'] > $b['result_2']) {
                     return -1;
                 }
 
                 if ($a['result_3'] < $b['result_3']) {
                     return 1;
                 }
-
-                if ($a['result_3'] > $b['result_3']) {
+                elseif ($a['result_3'] > $b['result_3']) {
                     return -1;
                 }
 
@@ -304,6 +269,8 @@ class TestController
 
         echo 'DONE (' . ($stopTime - $startTime) . ')' . PHP_EOL;
 
+//        print_r(self::$competitiveGroupList);
+
         /**
          * Заполняем позицию в КГ
          */
@@ -313,7 +280,7 @@ class TestController
         $startTime = microtime(true);
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
-            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
+            if (count(self::$competitiveGroupList[$cgId]['applicationList']) == 0) { // В КГ нет заявлений
                 continue;
             }
 
@@ -345,8 +312,10 @@ class TestController
         while (true) {
             $stop = true;
 
+//            echo PHP_EOL;
+
             for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
-                if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
+                if (count(self::$competitiveGroupList[$cgId]['applicationList']) == 0) { // В КГ нет заявлений
                     continue;
                 }
 
@@ -397,8 +366,6 @@ class TestController
                 self::$competitiveGroupList[$cgId]['count'] = $count; // Сохраняем количество зачисленных в КГ
             }
 
-//            echo PHP_EOL;
-
             if ($stop === true) {
                 break;
             }
@@ -419,7 +386,7 @@ class TestController
         $startTime = microtime(true);
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
-            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
+            if (count(self::$competitiveGroupList[$cgId]['applicationList']) == 0) { // В КГ нет заявлений
                 continue;
             }
 
@@ -504,7 +471,7 @@ class TestController
 //        $maxWidth = 80;
 //
 //        for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
-//            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
+//            if (count(self::$competitiveGroupList[$cgId]['applicationList']) == 0) { // В КГ нет заявлений
 //                continue;
 //            }
 //
@@ -548,7 +515,7 @@ class TestController
          */
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
-            if (!isset(self::$competitiveGroupList[$cgId]['applicationList'])) { // В КГ нет заявлений
+            if (count(self::$competitiveGroupList[$cgId]['applicationList']) == 0) { // В КГ нет заявлений
                 continue;
             }
 
