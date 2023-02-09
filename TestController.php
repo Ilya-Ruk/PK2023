@@ -37,7 +37,8 @@ class TestController
      *     result_total,    // Общая сумма баллов (включая балл за ИД)
      *     priority,        // Приоритет заявления (1 - максимальный)
      *     status,          // Зачислен (1)/Не зачислен (0)
-     *     position         // Позиция (начиная с 1)
+     *     position,        // Позиция (начиная с 1)
+     *     original         // Наличие оригинала
      *   ]
      * ]
      */
@@ -48,6 +49,7 @@ class TestController
      *   status,            // Зачислен (1)/Не зачислен (0)
      *   cgId,              // ID КГ, в которую зачислен абитуриент, или null (если абитуриент не поступил)
      *   priority,          // Приоритет заявления (1 - максимальный), с которым зачислен абитуриент, или null (если абитуриент не поступил)
+     *   original,          // Наличие оригинала
      *
      *   applicationList[cgId] => [ // Список выбранных КГ с расставленными приоритетами (индекс - ID КГ)
      *     result_1,        // Балл за ВИ 1
@@ -115,6 +117,7 @@ class TestController
             self::$studentList[$studentId]['status'] = self::STATUS_NO; // Не зачислен
             self::$studentList[$studentId]['cgId'] = null;
             self::$studentList[$studentId]['priority'] = null;
+            self::$studentList[$studentId]['original'] = (bool)mt_rand(0, 1);
 
             $appCount = mt_rand(1, self::MAX_APPLICATIONS); // Количество заявлений для текущего абитуриента
 
@@ -188,6 +191,8 @@ class TestController
                 continue;
             }
 
+            $original = self::$studentList[$studentId]['original'];
+
             foreach (self::$studentList[$studentId]['applicationList'] as $cgId => $cgData) {
                 self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['result_1'] = $cgData['result_1'];
                 self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['result_2'] = $cgData['result_2'];
@@ -198,6 +203,7 @@ class TestController
                 self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['priority'] = $cgData['priority'];
                 self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['status'] = self::STATUS_NO; // Не зачислен
                 self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['position'] = null;
+                self::$competitiveGroupList[$cgId]['applicationList'][$studentId]['original'] = $original;
             }
         }
 
@@ -323,6 +329,10 @@ class TestController
                 $number = self::$competitiveGroupList[$cgId]['number']; // Общее количество мест в КГ
 
                 foreach (self::$competitiveGroupList[$cgId]['applicationList'] as $studentId => &$studentData) {
+                    if ($studentData['original'] === false) { // Нет оригинала
+                        continue;
+                    }
+
                     if (self::$studentList[$studentId]['status'] == self::STATUS_NO) { // Абитуриент не зачислен
                         // Помечаем абитуриента зачисленным
 
@@ -393,6 +403,10 @@ class TestController
             $count = 0; // Количество зачисленных в КГ
 
             foreach (self::$competitiveGroupList[$cgId]['applicationList'] as $studentId => &$studentData) {
+                if ($studentData['original'] === false) { // Нет оригинала
+                    continue;
+                }
+
                 if ($studentData['status'] == self::STATUS_YES) {
                     $count++;
                 }
@@ -511,7 +525,8 @@ class TestController
          * - балл за ВИ 2;
          * - балл за ВИ 3;
          * - приоритет заявления;
-         * - признак зачисления (* - зачислен)
+         * - признак оригинала ("+" - есть оригинал);
+         * - признак зачисления ("*" - зачислен)
          */
 
         for ($cgId = 0; $cgId < self::COMPETITIVE_GROUPS; $cgId++) {
@@ -522,7 +537,7 @@ class TestController
             printf("\n----- %d (%d / %d) -----\n\n", $cgId, self::$competitiveGroupList[$cgId]['count'], self::$competitiveGroupList[$cgId]['number']);
 
             foreach (self::$competitiveGroupList[$cgId]['applicationList'] as $studentId => &$studentData) {
-                printf("%3d %5d %3d %3d %3d %3d %3d %3d %2d %s\n", $studentData['position'], $studentId, $studentData['result_total'], $studentData['result_ia'], $studentData['result_sum'], $studentData['result_1'], $studentData['result_2'], $studentData['result_3'], $studentData['priority'], ($studentData['status'] == self::STATUS_YES ? '*' : ''));
+                printf("%3d %5d %3d %3d %3d %3d %3d %3d %2d %s %s\n", $studentData['position'], $studentId, $studentData['result_total'], $studentData['result_ia'], $studentData['result_sum'], $studentData['result_1'], $studentData['result_2'], $studentData['result_3'], $studentData['priority'], ($studentData['original'] === true ? '+' : ' '), ($studentData['status'] == self::STATUS_YES ? '*' : ''));
             }
         }
     }
